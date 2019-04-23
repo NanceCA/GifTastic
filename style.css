@@ -1,0 +1,8 @@
+.gif-holder{
+
+    display: flex;
+    border: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-around;
+}
