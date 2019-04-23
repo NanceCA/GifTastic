@@ -46,7 +46,7 @@ $("#find-gif").on("click", function (event) {
                 personImage.attr("src", results[j].images.fixed_height.url);
                 gifDiv.append(p);
                 gifDiv.append(personImage);
-                $("#gifs-appear-here").append(gifDiv);
+                $("#gifs-appear-here").prepend(gifDiv);
 
             }
 
