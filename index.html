@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+    <title>GifTastic</title>
+</head>
+
+<body>
+    <div id="buttonView"></div>
+    <form id="gif-form">
+        <label>Search for a new category of GIFs here:</label>
+        <input type="text" id="gif-input"><br>
+        <input id="find-gif" type="submit" value="Search">
+    </form>
+
+    <div id="gifs-appear-here" 3></div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+
+
+
+        //declaring array to capture the string inputs
+        var topics = ["hello", "testing"];
+        var apiKey = "api_key=WqNuVYWXaAcb3l7C3wEOzvb2Z2OGpBMD"
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=";
+
+        //looping through items in the array and creating buttons accordingly
+        var buildButtons = function () {
+            for (var i = 0; i < topics.length; i++) {
+                var newButton = $("<button>");
+                newButton.addClass("btn btn-primary");
+                newButton.addClass("gif");
+                newButton.attr("data-name", topics[i]);
+                newButton.text(topics[i]);
+                console.log([i])
+
+                $("#buttonView").append(newButton);
+            }
+        }
+
+        $(document).ready(function () {
+            buildButtons();
+        })
+        //event to push 
+
+        $("#find-gif").on("click", function (event) {
+            event.preventDefault(); //preventing the form from trying to submit itself
+
+            var gifData = $("#gif-input").val().trim();
+            topics.push(gifData);
+            $('#buttonView').empty()
+            buildButtons();
+            //calling in the api
+            $.ajax({
+                url: queryURL + gifData + '&' + apiKey,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                var results = response.data;
+
+                for (var j = 0; j < results.length; j++) {
+                    if (results[j].rating !== "r" && results[j].rating !== "pg-13") {
+                        var gifDiv = $("<div>");
+                        var rating = results[j].rating
+                        var p = $("<p>").text("Rating is" + rating);
+                        var personImage = $("<img>");
+                        personImage.attr("src", results[j].images.fixed_height.url);
+                        gifDiv.append(p);
+                        gifDiv.append(personImage);
+                        $("#gifs-appear-here").prepend(gifDiv);
+
+                    }
+
+                }
+
+
+
+            });
+
+
+
+        });
+
+        //pull appropriate GIFs according to the button clicked
+        //display 10 GIFs according to the button clicked
+        //display the rating for each GIF
+
+
+        // $(".gif").on("click", function () {
+
+            // var state = $(this).attr("data-state");
+        //     // if (state === "still") {
+        //     //         $(this).attr("src", $(this).attr("data-animate"));
+        //     //         $(this).attr("data-state", "animated");
+        //     //         state = $(this).attr("data-state");
+        //     //         console.log("The image was still now it's " + state);
+        //     //     }
+        //     //     else {
+        //     //         $(this).attr("src", $(this).attr("data-still"));
+        //     //         $(this).attr("data-state", "still");
+        //     //         state = $(this).attr("data-state")
+        //     //         console.log("This was animated now it's " + state);
+        //     //     }
+
+        // });
+
+
+    </script>
+
+</body>
+
+</html>
